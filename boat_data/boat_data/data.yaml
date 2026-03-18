@@ -1,0 +1,5 @@
+train: ../boat_data/train/images
+val: ../boat_data/valid/images
+
+nc: 6
+names: ['iceberg', 'rock', 'aircraft_carrier', 'warship', 'submarine', 'boat']

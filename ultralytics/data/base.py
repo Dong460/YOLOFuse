@@ -18,6 +18,20 @@ from ultralytics.data.utils import FORMATS_HELP_MSG, HELP_URL, IMG_FORMATS
 from ultralytics.utils import DEFAULT_CFG, LOCAL_RANK, LOGGER, NUM_THREADS, TQDM
 
 
+def resolve_paired_modality_path(path: str, src_dir: str = "images", dst_dir: str = "imagesIR") -> str:
+    """Resolve paired modality path, allowing a different image suffix in the target folder."""
+    paired = Path(path.replace(src_dir, dst_dir))
+    if paired.exists():
+        return str(paired)
+
+    for suffix in IMG_FORMATS:
+        candidate = paired.with_suffix(f".{suffix}")
+        if candidate.exists():
+            return str(candidate)
+
+    return str(paired)
+
+
 class BaseDataset(Dataset):
     """
     Base dataset class for loading and processing image data.
@@ -155,7 +169,7 @@ class BaseDataset(Dataset):
     def load_image(self, i, rect_mode=True):
         """Loads 1 image from dataset index 'i', returns (im, resized hw)."""
         im, f, fn = self.ims[i], self.im_files[i], self.npy_files[i]
-        ir = f.replace("images", "imagesIR")          # ↳ 对应的红外文件
+        ir = resolve_paired_modality_path(f)          # ↳ 对应的红外文件
         if im is None:                             # not cached in RAM
             # ---------- ① 读取 ----------
             if fn.exists():                        # *.npy 缓存

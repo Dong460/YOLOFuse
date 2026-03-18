@@ -1,0 +1,17 @@
+path: /home/dongyuting/YOLOFuse/boat_dual
+train: images/train
+val: images/val
+test: images/test
+# second modality folder expected by YOLOFuse
+images_ir_train: imagesIR/train
+images_ir_val: imagesIR/val
+images_ir_test: imagesIR/test
+
+# TODO: edit class names below
+names:
+  0: iceberg
+  1: rock
+  2: aircraft_carrier
+  3: warship
+  4: submarine
+  5: boat

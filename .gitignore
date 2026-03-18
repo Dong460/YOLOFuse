@@ -175,3 +175,7 @@ ultralytics.egg-info
 
 # calibration image
 calibration_*.npy
+
+# Large model files (VLM/LLM weights)
+models/
+*.safetensors

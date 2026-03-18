@@ -20,6 +20,20 @@ from ultralytics.utils import DEFAULT_CFG, IS_COLAB, IS_KAGGLE, LOGGER, ops
 from ultralytics.utils.checks import check_requirements
 
 
+def resolve_paired_modality_path(path: str, src_dir: str = "images", dst_dir: str = "imagesIR") -> str:
+    """Resolve paired modality path, allowing a different image suffix in the target folder."""
+    paired = Path(path.replace(src_dir, dst_dir))
+    if paired.exists():
+        return str(paired)
+
+    for suffix in IMG_FORMATS:
+        candidate = paired.with_suffix(f".{suffix}")
+        if candidate.exists():
+            return str(candidate)
+
+    return str(paired)
+
+
 @dataclass
 class SourceTypes:
     """
@@ -381,8 +395,7 @@ class LoadImagesAndVideos:
 
             path = self.files[self.count]
 
-            ir_path = path.split("images")  # for IR images
-            ir_path = str(ir_path[0] + "imagesIR" + ir_path[1])
+            ir_path = resolve_paired_modality_path(path)
 
             if self.video_flag[self.count]:
                 self.mode = "video"
